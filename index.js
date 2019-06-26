@@ -2,8 +2,8 @@ const VkBot = require('node-vk-bot-api')
 const Markup = require('node-vk-bot-api/lib/markup');
 const bot = new VkBot("892add9ad6f386306ccbf2981e68067989ead1e6847c181c484c62606b53448ca0e867aaa08d605e44798")
 var MongoClient = require("mongodb").MongoClient
-var url = "mongodb://127.0.0.1:27017"
-var db_name = "hs_bot"
+var url = "mongodb://admin:q2w3e4r5@ds243717.mlab.com:43717/heroku_flw6d545"
+var db_name = "heroku_flw6d545"
 
 bot.on((ctx) => {
     if(ctx.message.text.toLowerCase() === "записаться"){
