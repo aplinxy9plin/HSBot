@@ -109,16 +109,34 @@ bot.on((ctx) => {
                     ctx.reply("Вы в очереди. Ожидайте")
                     db.close()
                 }else{
-                    dbo.collection("turn").updateOne({user_id: ctx.message.from_id}, {$set: {pre_tag: ctx.message.text}}, (err) => {
-                        if(err) throw err;
-                        ctx.reply(ctx.message.text+" это ваш Battle tag?\n1 - Да\n2 - Нет", null, Markup
-                        .keyboard(
-                            [
-                                "Да", "Нет"
-                            ]
-                        ))
-                        db.close()
-                    })
+                    var tag = ctx.message.text;
+                    var a = tag.split("#")
+                    if(a.length > 1){
+                        if(Number(a[1])){
+                            if(parseInt(a[1], 10).toString().length < 4 || parseInt(a[1], 10).toString().length > 6){
+                                ctx.reply("Неверный формат Battle Tag, пришлите верный.")
+                            }else{
+                                if(!Number(a[0])){
+                                    dbo.collection("turn").updateOne({user_id: ctx.message.from_id}, {$set: {pre_tag: ctx.message.text}}, (err) => {
+                                        if(err) throw err;
+                                        ctx.reply(ctx.message.text+" это ваш Battle tag?\n1 - Да\n2 - Нет", null, Markup
+                                        .keyboard(
+                                            [
+                                                "Да", "Нет"
+                                            ]
+                                        ))
+                                        db.close()
+                                    })
+                                }else{
+                                    ctx.reply("Неверный формат Battle Tag, пришлите верный.")
+                                }
+                            }	
+                        }else{
+                            ctx.reply("Неверный формат Battle Tag, пришлите верный.")
+                        }	
+                    }else{
+                    	ctx.reply("Неверный формат Battle Tag, пришлите верный.")
+                    }
                 }
             })
         })
