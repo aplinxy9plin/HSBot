@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "mongodb": "^3.2.7",
-    "node-vk-bot-api": "^2.4.11"
+    "node-vk-bot-api": "^2.4.11",
+    "request": "^2.88.0"
   }
 }
