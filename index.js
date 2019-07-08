@@ -8,13 +8,23 @@ var db_name = "heroku_flw6d545"
 var admin_token = ""
 var group_id = '183842916'
 var phrases = require("./phrases.json")
+var express = require("express")
+var app = express()
+var port = process.env.PORT || 3000
 bot.on((ctx) => {
     MongoClient.connect(url, (err, db) => {
+        var dbo = db.db(db_name)
         dbo.collection("users").findOne({user_id: ctx.message.from_id}, (err, user) => {
             if(err) throw err;
-            if(user && (new Date(new Date() - new Date(user.date))).getMinutes() < 1440){
-                ctx.reply(phrases.blocks[3].time)
-                db.close()
+            if(user && (new Date(new Date() - new Date(user.date))).getMinutes() < 1080){
+                if(!user.info_message){
+                    ctx.reply(phrases.blocks[3].time)
+                    dbo.collection("users").updateOne({user_id: ctx.message.from_id}, {$set: {info_message: true}}, () => {
+                        db.close()
+                    })
+                }else{
+                    db.close()
+                }
             }else{
                 if(ctx.message.text === "Да 🍻"){
                     MongoClient.connect(url, (err, db) => {
@@ -26,6 +36,9 @@ bot.on((ctx) => {
                                 var res = new Date(new Date() - new Date(user.date))
                                 if(res.getMinutes() < 1440){
                                     ctx.reply(phrases.blocks[3].time)
+                                    dbo.collection("users").updateOne({user_id: ctx.message.from_id}, {$set: {info_message: true}}, () => {
+                                        db.close()
+                                    })
                                 }else{
                                 dbo.collection("turn").findOne({user_id: ctx.message.from_id}, (err, result) => {
                                     if(err) throw err;
@@ -78,12 +91,12 @@ bot.on((ctx) => {
                         var dbo = db.db(db_name)
                         dbo.collection("users").findOne({user_id: ctx.message.from_id}, (err, user) => {
                             if(user){
-                                dbo.collection("users").updateOne({user_id: ctx.message.from_id}, {$set: {data: new Date()}})
+                                dbo.collection("users").updateOne({user_id: ctx.message.from_id}, {$set: {date: new Date()}})
                             }else{
-                                dbo.collection("users").insertOne({user_id: enemy.user_id, date: new Date(), strike: 0})
+                                dbo.collection("users").insertOne({user_id: ctx.message.from_id, date: new Date(), strike: 0})
                             }
-                            ctx.reply("Ну, ничего. Держи ещё "+phrases.blocks[1].food[rand(0, phrases.blocks[1].food.length)])
-                            ctx.reply(phrases.blocks[1].stories[phrases.blocks[1].stories.length])
+                            ctx.reply("Ну, ничего.\n Держи ещё "+phrases.blocks[1].food[rand(0, phrases.blocks[1].food.length)] +"🤛🏾")
+                            ctx.reply(phrases.blocks[1].stories[rand(0, phrases.blocks[1].stories.length)])
                         })
                     })
                 } else if(ctx.message.text === "Да👍🏾"){
@@ -207,13 +220,13 @@ bot.on((ctx) => {
                                                 dbo.collection("users").findOne({user_id: ctx.message.from_id}, (err, now_user) => {
                                                     if(err) throw err;
                                                     if(now_user){
-                                                        dbo.collection("users").updateOne({user_id: ctx.message.from_id}, {$set: {data: new Date(), enemy: enemy.user_id}}, (err, check) => {
+                                                        dbo.collection("users").updateOne({user_id: ctx.message.from_id}, {$set: {date: new Date(), enemy: enemy.user_id}}, (err, check) => {
                                                             if(err) throw err;
                                                             if(check){
                                                                 dbo.collection("users").findOne({user_id: enemy.user_id}, (err, now_user) => {
                                                                     if(err) throw err;
                                                                     if(now_user){
-                                                                        dbo.collection("users").updateOne({user_id: enemy.user_id}, {$set: {data: new Date(), enemy: ctx.message.from_id}})
+                                                                        dbo.collection("users").updateOne({user_id: enemy.user_id}, {$set: {date: new Date(), enemy: ctx.message.from_id}})
                                                                     }else{
                                                                         dbo.collection("users").insertOne({user_id: enemy.user_id, date: new Date(), strike: 0, enemy: ctx.message.from_id})
                                                                     }
@@ -227,7 +240,7 @@ bot.on((ctx) => {
                                                                 dbo.collection("users").findOne({user_id: enemy.user_id}, (err, now_user) => {
                                                                     if(err) throw err;
                                                                     if(now_user){
-                                                                        dbo.collection("users").updateOne({user_id: enemy.user_id}, {$set: {data: new Date(), enemy: ctx.message.from_id}})
+                                                                        dbo.collection("users").updateOne({user_id: enemy.user_id}, {$set: {date: new Date(), enemy: ctx.message.from_id}})
                                                                     }else{
                                                                         dbo.collection("users").insertOne({user_id: enemy.user_id, date: new Date(), strike: 0, enemy: ctx.message.from_id})
                                                                     }
@@ -342,4 +355,6 @@ function rand(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-bot.startPolling()
+app.listen(port, () => {
+    bot.startPolling()
+})

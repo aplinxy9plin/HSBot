@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
     "mongodb": "^3.2.7",
     "node-vk-bot-api": "^2.4.11",
     "request": "^2.88.0"
