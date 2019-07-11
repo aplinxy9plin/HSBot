@@ -174,7 +174,7 @@ bot.on((ctx) => {
                             }
                         })
                     })
-                } else if(ctx.message.text === "2" || ctx.message.text.toLowerCase() === "нет"){
+                } else if(ctx.message.text === "2" || ctx.message.text === "нет"){
                     MongoClient.connect(url, (err, db) => {
                         if(err) throw err;
                         var dbo = db.db(db_name)
@@ -200,7 +200,7 @@ bot.on((ctx) => {
                             }
                         })
                     })
-                } else if(ctx.message.text === "1" || ctx.message.text.toLowerCase() === "да"){
+                } else if(ctx.message.text === "1" || ctx.message.text === "да"){
                     MongoClient.connect(url, (err, db) => {
                         if(err) throw err;
                         var dbo = db.db(db_name)
@@ -254,7 +254,7 @@ bot.on((ctx) => {
                                                             "Да👍🏾",
                                                             "Нет👎🏾"
                                                         ]).oneTime())
-                                                        bot.sendMessage(phrases.blocks[3].question, null, Markup.keyboard([
+                                                        bot.sendMessage(enemy.user_id, phrases.blocks[3].question, null, Markup.keyboard([
                                                             "Да👍🏾",
                                                             "Нет👎🏾"
                                                         ]).oneTime())
