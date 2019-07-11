@@ -213,8 +213,10 @@ bot.on((ctx) => {
                                         dbo.collection("turn").findOne({user_id: {$ne: ctx.message.from_id}, tag: {$ne: false}}, (err, enemy) => {
                                             if(err) throw err;
                                             if(enemy){
-                                                ctx.reply(phrases.blocks[3].found+" "+enemy.tag);
-                                                bot.sendMessage(enemy.user_id, phrases.blocks[3].found+" " + user.pre_tag)
+                                                ctx.reply(phrases.blocks[3].found);
+                                                ctx.reply("BattleTag: " + enemy.tag)
+                                                bot.sendMessage(enemy.user_id, phrases.blocks[3].found)
+                                                bot.sendMessage(enemy.user_id, "BattleTag: " + user.pre_tag)
                                                 dbo.collection("turn").remove({user_id: ctx.message.from_id})
                                                 dbo.collection("turn").remove({user_id: enemy.user_id})
                                                 dbo.collection("users").findOne({user_id: ctx.message.from_id}, (err, now_user) => {
