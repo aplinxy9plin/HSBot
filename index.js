@@ -358,5 +358,5 @@ function rand(min, max) {
 }
 
 app.listen(port, () => {
-    bot.startPolling()
+    // bot.startPolling()
 })
