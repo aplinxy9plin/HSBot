@@ -133,8 +133,10 @@ bot.on((ctx) => {
                                             if(check){
                                                 dbo.collection("users").updateOne({user_id: enemy.user_id}, {$set: {date: new Date(), enemy: ctx.message.from_id, status: 5}}, (err) => {
                                                     if(err) throw err;
-                                                    db.close()
+                                                    // db.close()
                                                     setTimeout(() => {
+                                                        dbo.collection("users").updateOne({user_id: from_id}, {$set: {status: 6}})
+                                                        dbo.collection("users").updateOne({user_id: enemy.user_id}, {$set: {status: 6}})
                                                         bot.sendMessage(from_id, phrases.blocks[3].question, null, Markup.keyboard([
                                                             "Да👍🏾",
                                                             "Нет👎🏾"
@@ -143,6 +145,7 @@ bot.on((ctx) => {
                                                             "Да👍🏾",
                                                             "Нет👎🏾"
                                                         ]).oneTime())
+                                                        // db.close()
                                                     }, 300000)
                                                 })
                                             }
@@ -173,6 +176,9 @@ bot.on((ctx) => {
                         // nothing
                         break;
                     case 5: 
+                        // Wait for question
+                        break;
+                    case 6: 
                         if(text === "Да👍🏾" || text.toLowerCase() === "да"){
                             dbo.collection("users").updateOne({user_id: from_id}, {$set: {status: 0}}, (err) => {
                                 if(err) throw err;
